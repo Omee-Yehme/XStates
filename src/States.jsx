@@ -16,7 +16,7 @@ const State = () => {
         fetch("https://crio-location-selector.onrender.com/countries")
             .then((res) => {
                 if (!res.ok) throw new Error();
-                return res?.json();
+                return res.json();
             })
             .then((data) => {
                 setCountries(data);
@@ -34,11 +34,10 @@ const State = () => {
         setSelectedState("");
         setSelectedCity("");
         setCities([]);
-        fetch(
-            `https://crio-location-selector.onrender.com/country=${country}/states`
-        )
+
+        fetch(`https://crio-location-selector.onrender.com/country=${country}/states`)
             .then((res) => {
-                if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error("State fetch failed");
                 return res?.json();
             })
             .then((data) => {
@@ -55,9 +54,8 @@ const State = () => {
         const state = e.target.value;
         setSelectedState(state);
         setSelectedCity("");
-        fetch(
-            `https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`
-        )
+
+        fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`)
             .then((res) => res.json())
             .then((data) => setCities(data))
             .catch(() => setCities([]));
@@ -87,6 +85,7 @@ const State = () => {
                     Failed to load countries.
                 </p>
             )}
+
             <select
                 style={{ padding: "10px", width: "150px", marginRight: "10px" }}
                 onChange={handleStateChange}
@@ -101,10 +100,11 @@ const State = () => {
                 ))}
             </select>
             {stateError && (
-                <p style={{ color: "red", marginTop: "10px" }}>
-                    Failed to load states.
+                <p style={{ color: "red", marginTop: "10px" }} role="alert" data-testid="state-error">
+                    Unable to fetch states list. Please try again later.
                 </p>
             )}
+
             <select
                 style={{ padding: "10px", width: "150px" }}
                 onChange={handleCityChange}
@@ -118,6 +118,7 @@ const State = () => {
                     </option>
                 ))}
             </select>
+
             {selectedCity && (
                 <p style={{ marginTop: "20px", fontSize: "larger" }}>
                     You selected {selectedCity}, {selectedState}, {selectedCountry}
