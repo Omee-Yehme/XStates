@@ -16,7 +16,7 @@ const State = () => {
         fetch("https://crio-location-selector.onrender.com/countries")
             .then((res) => {
                 if (!res.ok) throw new Error();
-                return res.json();
+                return res?.json();
             })
             .then((data) => {
                 setCountries(data);
